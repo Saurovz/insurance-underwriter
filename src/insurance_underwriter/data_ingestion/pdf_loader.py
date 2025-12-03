@@ -1,0 +1,1 @@
+# Helper function to read PDF files
