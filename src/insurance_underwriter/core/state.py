@@ -25,7 +25,7 @@ class UnderwritingState(TypedDict):
     # ===== HEALTH INFORMATION =====
     chronic_conditions: List[str]
     bmi: float
-    smoking_status: bool       # Yes/no
+    smoking_status: str       # List the possibile values here
     alcohol_consumption: str   # "None", "Social", "Heavy"
     # family_history: List[str]
     # current_medications: List[str]
