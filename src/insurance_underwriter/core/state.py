@@ -14,9 +14,9 @@ class UnderwritingState(TypedDict):
     gender: str
     contact_number: str
     email: str
-    address: str
-    occupation: str
-    annual_income: float
+    #address: str
+    #occupation: str
+    #annual_income: float
     
     # ===== HEALTH INFORMATION =====
     chronic_conditions: List[str]
