@@ -14,15 +14,19 @@ class UnderwritingState(TypedDict):
     gender: str
     contact_number: str
     email: str
-    address: str
-    occupation: str
-    annual_income: float
+    location_tier: int  #Tier 1 is most expensive
+    coverage_amount: float
+    #address: str
+    #occupation: str
+    #annual_income: float
+    plan_type: str      # "Individual", "Family"
+    ncb_years: int      
     
     # ===== HEALTH INFORMATION =====
     chronic_conditions: List[str]
     bmi: float
-    smoking_status: str
-    alcohol_consumption: str
+    smoking_status: str       # List the possibile values here
+    alcohol_consumption: str   # "None", "Social", "Heavy"
     # family_history: List[str]
     # current_medications: List[str]
     # recent_hospitalizations: List[Dict[str, Any]]
@@ -39,6 +43,7 @@ class UnderwritingState(TypedDict):
     medical_loading_percentage: float
     final_premium: float
     recommended_plan: str
+    decision: str          # "APPROVED", "REJECTED", "MANUAL_REVIEW"
     
     # ===== WORKFLOW CONTROL =====
     requires_human_review: bool
