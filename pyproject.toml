@@ -17,6 +17,8 @@ dependencies = [
     "pypdf>=4.0.0",
     "transformers>=4.30.0",
     "torch>=2.0.0",
+    "streamlit>=1.52.1",
+    "pdfplumber>=0.11.8",
 ]
 
 dev = [

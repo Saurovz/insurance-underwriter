@@ -1,0 +1,27 @@
+def create_initial_state():
+    return {
+        "applicant_name": "",
+        "age": 0,
+        "gender": "",
+        "contact_number": "",
+        "email": "",
+        "address": "",
+        "occupation": "",
+        "annual_income": 0.0,
+        "bmi": 0.0,
+        "smoking_status": "",
+        "alcohol_consumption": "",
+        "risk_score": 0.0,
+        "risk_category": "",
+        "flagged_conditions": [],
+        "exclusions": [],
+        "base_premium": 0.0,
+        "medical_loading_percentage": 0.0,
+        "final_premium": 0.0,
+        "recommended_plan": "",
+        "requires_human_review": False,
+        "review_reason": "",
+        "current_step": "initial",
+        "errors": [],
+        "processing_timestamp": ""
+    }
