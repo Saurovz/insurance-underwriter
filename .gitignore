@@ -9,5 +9,7 @@ wheels/
 # Virtual environments
 .venv
 
+# The Secrets
+src/insurance_underwriter/config/env/
 # data source
 data
