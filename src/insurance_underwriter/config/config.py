@@ -1,5 +1,7 @@
 import os
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
+from dotenv import load_dotenv
+load_dotenv()
 
 
 class ModelConfig:
@@ -7,6 +9,7 @@ class ModelConfig:
     
     # Model settings
     REPO_ID = "openai/gpt-oss-safeguard-20b"  # or "meta-llama/Llama-3.1-8B-Instruct"
+    # REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
     TASK = "text-generation"
     TEMPERATURE = 0.7
     MAX_NEW_TOKENS = 2048

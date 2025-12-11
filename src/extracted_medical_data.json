@@ -1,0 +1,19 @@
+{
+    "extracted_data": {
+        "applicant_name": "Rohan Sharma",
+        "age": 30,
+        "gender": "Male",
+        "contact_number": "+91 9876543210",
+        "email": "example.user@email.com",
+        "address": "221B Baker Street, Mumbai, Maharashtra",
+        "occupation": "Software Engineer",
+        "annual_income": 1250000,
+        "chronic_conditions": [],
+        "bmi": 25.48,
+        "smoking_status": "smoker",
+        "alcohol_consumption": "moderate"
+    },
+    "timestamp": "2025-12-11T00:45:43.991397",
+    "status": "success",
+    "errors": []
+}
