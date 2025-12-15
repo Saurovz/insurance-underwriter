@@ -88,7 +88,7 @@ Return ONLY a valid JSON object with this exact structure (no markdown formattin
     "chronic_conditions": [],
     "bmi": 0,
     "smoking_status": "unknown",
-    "alcohol_consumption": "unknown",
+    "alcohol_consumption": "unknown"
 }}
 
 Be thorough and accurate. Read all pages of all documents carefully.

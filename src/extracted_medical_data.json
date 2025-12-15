@@ -1,19 +1,19 @@
 {
     "extracted_data": {
-        "applicant_name": "Rohan Sharma",
-        "age": 30,
+        "applicant_name": "Arjun Kumar Desai",
+        "age": 16,
         "gender": "Male",
-        "contact_number": "+91 9876543210",
-        "email": "example.user@email.com",
-        "address": "221B Baker Street, Mumbai, Maharashtra",
-        "occupation": "Software Engineer",
-        "annual_income": 1250000,
+        "contact_number": "+91 8765432101",
+        "email": "amit.desai@email.com",
+        "address": "89 Shanti Nagar, Pune, Maharashtra 411005, India",
+        "occupation": "Student",
+        "annual_income": 0,
         "chronic_conditions": [],
-        "bmi": 25.48,
-        "smoking_status": "smoker",
-        "alcohol_consumption": "moderate"
+        "bmi": 22.49,
+        "smoking_status": "non-smoker",
+        "alcohol_consumption": "none"
     },
-    "timestamp": "2025-12-11T00:45:43.991397",
+    "timestamp": "2025-12-15T00:34:28.072829",
     "status": "success",
     "errors": []
 }

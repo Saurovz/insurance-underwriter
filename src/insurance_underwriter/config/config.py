@@ -8,8 +8,9 @@ class ModelConfig:
     """Configuration for LLM models."""
     
     # Model settings
-    REPO_ID = "openai/gpt-oss-safeguard-20b"  # or "meta-llama/Llama-3.1-8B-Instruct"
-    # REPO_ID = "mistralai/Mistral-7B-Instruct-v0.3"
+    REPO_ID = "openai/gpt-oss-20b"  # or "meta-llama/Llama-3.1-8B-Instruct"
+    # REPO_ID = "Qwen/Qwen2.5-72B-Instruct"
+    # REPO_ID = "deepseek-ai/DeepSeek-V3"
     TASK = "text-generation"
     TEMPERATURE = 0.7
     MAX_NEW_TOKENS = 2048
@@ -28,7 +29,7 @@ class ModelConfig:
 
 
 # Directory configurations
-DOCUMENTS_DIR = "D:\Github\AI_Healthcare\insurance-underwriter\src\insurance_underwriter\Documents"  # Single folder containing all PDFs
+DOCUMENTS_DIR = "D:\AI_HealthCare\insurance-underwriter\src\insurance_underwriter\Application_Form"  # Single folder containing all PDFs
 OUTPUT_JSON_FILE = "extracted_medical_data.json"
 
 # Risk Thresholds

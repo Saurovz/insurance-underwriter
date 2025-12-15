@@ -1,14 +1,11 @@
-# streamlit_app/pages/2_📊_Detail.py
-
 import streamlit as st
 import sys
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
 
-# Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from database import get_all_applications, get_application_by_id
+from streamlit_app.database import get_all_applications, get_application_by_id
 
 
 st.set_page_config(
@@ -24,13 +21,28 @@ st.divider()
 
 
 def get_approval_status(app_data):
-    """Determine approval status based on requires_human_review field"""
-    if app_data.get('requires_human_review') is None:
+    """Determine approval status based on risk category and review requirements"""
+    
+    risk_category = app_data.get('risk_category', '').upper()
+    requires_review = app_data.get('requires_human_review')
+    
+    # Check 1: DECLINED applications
+    if risk_category == 'DECLINED':
+        return "Application Declined", "❌", "red"
+    
+    # Check 2: Processing not complete
+    if requires_review is None:
         return "Processing Incomplete", "⏳", "gray"
-    elif app_data.get('requires_human_review'):
+    
+    # Check 3: Requires human review (HIGH or other review triggers)
+    elif requires_review:
         return "Requires Human Review", "👤", "orange"
+    
+    # Check 4: Auto-approved (LOW/MEDIUM without review flags)
     else:
         return "Auto-Approved", "✅", "green"
+
+
 
 
 def display_applications_table():
@@ -44,10 +56,13 @@ def display_applications_table():
         st.info("👉 Please process applications on the **Application** page first.")
         return
     
-    # Filter to show only applications with premium calculation complete
+    # ✅ FIX: Filter to show applications with premium calculation complete
+    # Include both approved (premium > 0) and declined (premium = 0) applications
     completed_apps = [
         app for app in all_applications 
-        if app.get('final_premium') is not None and app.get('final_premium') > 0
+        if (app.get('final_premium') is not None and 
+            app.get('risk_score') is not None and 
+            app.get('current_step') in ['premium_calculation_complete', 'pending_human_review', 'completed'])
     ]
     
     if not completed_apps:
@@ -56,6 +71,9 @@ def display_applications_table():
         return
     
     st.success(f"📋 Found **{len(completed_apps)}** completed application(s)")
+    
+    # ... rest of your code remains the same
+
     
     # Create filters section
     col1, col2, col3 = st.columns([2, 1, 1])
@@ -70,7 +88,7 @@ def display_applications_table():
     with col2:
         status_filter = st.selectbox(
             "Filter by Status",
-            options=["All", "Auto-Approved", "Requires Human Review"],
+            options=["All", "Auto-Approved", "Requires Human Review", "Application Declined"],
             key="status_filter"
         )
     
@@ -95,9 +113,20 @@ def display_applications_table():
     # Status filter
     if status_filter != "All":
         if status_filter == "Auto-Approved":
-            filtered_apps = [app for app in filtered_apps if not app.get('requires_human_review')]
+            filtered_apps = [
+                app for app in filtered_apps 
+                if not app.get('requires_human_review') and app.get('risk_category') != 'DECLINED'
+            ]
         elif status_filter == "Requires Human Review":
-            filtered_apps = [app for app in filtered_apps if app.get('requires_human_review')]
+            filtered_apps = [
+                app for app in filtered_apps 
+                if app.get('requires_human_review') and app.get('risk_category') != 'DECLINED'
+            ]
+        elif status_filter == "Application Declined":
+            filtered_apps = [
+                app for app in filtered_apps 
+                if app.get('risk_category') == 'DECLINED'
+            ]
     
     # Sort by date
     filtered_apps = sorted(
@@ -184,16 +213,23 @@ def display_detailed_view(application_id: str):
     status_text, status_icon, status_color = get_approval_status(data)
     
     # Display header with status
+    # Display header with status
+    # Display header with status
     col1, col2 = st.columns([3, 1])
     with col1:
         st.markdown(f"### Application Details: {data.get('applicant_name', 'N/A')}")
     with col2:
-        if status_color == "green":
-            st.success(f"{status_icon} {status_text}")
+        # ✅ FIX: Proper color mapping
+        if status_color == "red":
+            st.error(f"{status_icon} {status_text}")
         elif status_color == "orange":
             st.warning(f"{status_icon} {status_text}")
+        elif status_color == "green":
+            st.success(f"{status_icon} {status_text}")
         else:
             st.info(f"{status_icon} {status_text}")
+
+
     
     # Create tabs for organized display
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -254,37 +290,90 @@ def display_detailed_view(application_id: str):
                 if exclusion:
                     st.info(f"- {exclusion}")
     
+    # with tab3:
+    #     st.markdown("#### Premium Calculation Breakdown")
+        
+    #     col1, col2 = st.columns(2)
+        
+    #     with col1:
+    #         st.metric(
+    #             label="Base Premium",
+    #             value=f"₹{data.get('base_premium', 0):,.0f}"
+    #         )
+    #         st.metric(
+    #             label="Medical Loading",
+    #             value=f"{data.get('medical_loading_percentage', 0):.0f}%"
+    #         )
+        
+    #     with col2:
+    #         st.metric(
+    #             label="Final Annual Premium",
+    #             value=f"₹{data.get('final_premium', 0):,.0f}",
+    #             delta=f"+₹{data.get('final_premium', 0) - data.get('base_premium', 0):,.0f}"
+    #         )
+    #         st.metric(
+    #             label="Recommended Plan",
+    #             value=data.get('recommended_plan', 'N/A')
+    #         )
+        
+    #     # Review Information
+    #     if data.get('requires_human_review'):
+    #         st.divider()
+    #         st.markdown("**👤 Human Review Required**")
+    #         st.warning(f"**Reason:** {data.get('review_reason', 'Not specified')}")
+
     with tab3:
         st.markdown("#### Premium Calculation Breakdown")
         
-        col1, col2 = st.columns(2)
+        # ✅ Special handling for DECLINED applications
+        if data.get('risk_category') == 'DECLINED':
+            st.error("### ❌ APPLICATION DECLINED")
+            st.markdown(f"""
+            This application has been **declined** due to high risk assessment.
+            
+            **Risk Score:** {data.get('risk_score', 0):.0f}/100  
+            **Risk Category:** {data.get('risk_category', 'N/A')}  
+            **Recommended Action:** {data.get('recommended_plan', 'N/A')}
+            """)
+            
+            if data.get('flagged_conditions'):
+                st.markdown("**Decline Reasons:**")
+                conditions = data.get('flagged_conditions', '').split('; ')
+                for condition in conditions:
+                    if condition:
+                        st.warning(f"- {condition}")
         
-        with col1:
-            st.metric(
-                label="Base Premium",
-                value=f"₹{data.get('base_premium', 0):,.0f}"
-            )
-            st.metric(
-                label="Medical Loading",
-                value=f"{data.get('medical_loading_percentage', 0):.0f}%"
-            )
-        
-        with col2:
-            st.metric(
-                label="Final Annual Premium",
-                value=f"₹{data.get('final_premium', 0):,.0f}",
-                delta=f"+₹{data.get('final_premium', 0) - data.get('base_premium', 0):,.0f}"
-            )
-            st.metric(
-                label="Recommended Plan",
-                value=data.get('recommended_plan', 'N/A')
-            )
-        
-        # Review Information
-        if data.get('requires_human_review'):
-            st.divider()
-            st.markdown("**👤 Human Review Required**")
-            st.warning(f"**Reason:** {data.get('review_reason', 'Not specified')}")
+        else:
+            # Normal premium display for accepted applications
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.metric(
+                    label="Base Premium",
+                    value=f"₹{data.get('base_premium', 0):,.0f}"
+                )
+                st.metric(
+                    label="Medical Loading",
+                    value=f"{data.get('medical_loading_percentage', 0):.0f}%"
+                )
+            
+            with col2:
+                st.metric(
+                    label="Final Annual Premium",
+                    value=f"₹{data.get('final_premium', 0):,.0f}",
+                    delta=f"+₹{data.get('final_premium', 0) - data.get('base_premium', 0):,.0f}"
+                )
+                st.metric(
+                    label="Recommended Plan",
+                    value=data.get('recommended_plan', 'N/A')
+                )
+            
+            # Review Information
+            if data.get('requires_human_review'):
+                st.divider()
+                st.markdown("**👤 Human Review Required**")
+                st.warning(f"**Reason:** {data.get('review_reason', 'Not specified')}")
+
     
     with tab4:
         st.markdown("#### Processing Metadata")

@@ -1,21 +1,19 @@
 {
     "extracted_data": {
-        "applicant_name": "Vikram Sharma",
-        "age": 53,
+        "applicant_name": "Neel Keshav R",
+        "age": 33,
         "gender": "Male",
-        "contact_number": "+91 9876543456",
-        "email": "vikram.sharma@email.com",
-        "address": "78 Golf View Apartments, Bangalore, Karnataka 560034, India",
-        "occupation": "Retired Executive",
-        "annual_income": 1200000,
-        "chronic_conditions": [
-            "hypertension"
-        ],
-        "bmi": 25.88,
+        "contact_number": "+91 7456689229",
+        "email": "keshav@work.com",
+        "address": "House No 47, Raj Ghat, Birbhum, Durgapur, West Bengal - 713253",
+        "occupation": "Freelancer",
+        "annual_income": 550000,
+        "chronic_conditions": [],
+        "bmi": 26.3,
         "smoking_status": "smoker",
         "alcohol_consumption": "moderate"
     },
-    "timestamp": "2025-12-11T09:19:49.448270",
+    "timestamp": "2025-12-15T12:20:53.483034",
     "status": "success",
     "errors": []
 }

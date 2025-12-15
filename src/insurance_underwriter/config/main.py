@@ -63,26 +63,23 @@ def print_summary(state):
 
 def main():
     print_header()
-
-    # 1️⃣ Create empty initial state (same template you already use)
+    
+    # Create empty initial state
     state = create_initial_state()
-
-    # 2️⃣ Update state by reading PDFs + LLM extraction
-    print("\n📂 Extracting and parsing documents...\n")
-    state = update_state_from_pdfs(state, DOCUMENTS_DIR)
-
-    # 3️⃣ Build underwriting workflow graph
+    
+    # Build workflow WITH document parsing (for CLI usage)
     print("📋 Building workflow graph...")
-    workflow = build_underwriting_workflow()
-
-    # 4️⃣ Execute workflow
+    workflow = build_underwriting_workflow(skip_document_parsing=False)  # ✅ Full workflow
+    
+    # Execute full workflow (will parse documents from DOCUMENTS_DIR)
     print("🚀 Running full underwriting workflow...\n")
     final_state = workflow.invoke(state)
-
-    # 5️⃣ Print summary
+    
+    # Print summary
     print_summary(final_state)
-
+    
     return final_state
+
 
 
 if __name__ == "__main__":
