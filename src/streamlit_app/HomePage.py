@@ -16,6 +16,23 @@ st.markdown(
 # Call the function to display the custom sidebar content
 show_sidebar()
 #st.sidebar.success("Welcome to DigiHealth Insurance App!")
+
+def hide_menuItem():
+    st.markdown(
+        """
+        <style>
+        /* Target the menu item and make it invisible */
+        span[label="Configure"] {
+            visibility: hidden; /* hide background */
+            display: none; /* hide the entire element */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+#Hide the "Configure" menu item
+hide_menuItem()
+
 st.markdown(
     """
     <div style='background-color: #f5f5f5; padding: 16px 0 16px 24px; border-radius: 10px; display: flex; align-items: center; gap: 16px;'>

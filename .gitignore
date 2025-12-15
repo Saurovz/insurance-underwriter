@@ -13,3 +13,4 @@ wheels/
 src/insurance_underwriter/config/env/
 # data source
 data
+src/streamlit_app/chroma_db/

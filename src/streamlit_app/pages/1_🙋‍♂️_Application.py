@@ -33,6 +33,22 @@ st.set_page_config(
 st.title("📝 Data Application Page")
 st.write("Use this page to input or process your data.")
 
+def hide_menuItem():
+    st.markdown(
+        """
+        <style>
+        /* Target the menu item and make it invisible */
+        span[label="Configure"] {
+            visibility: hidden; /* hide background */
+            display: none; /* hide the entire element */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+#Hide the "Configure" menu item
+hide_menuItem()
+
 def application_upload():
     """Handle file upload with separate sections for application form and medical documents"""
     st.subheader("Application Upload")

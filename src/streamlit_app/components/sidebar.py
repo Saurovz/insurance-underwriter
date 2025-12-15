@@ -4,7 +4,10 @@ def show_sidebar():
     """Adds custom content to the Streamlit sidebar."""
     with st.sidebar:
         st.header("⚙️ App Settings")
-        st.info("Custom content placed *above* the auto-generated navigation.")
+           # Add clickable page name for app.py
+        if st.button("Configuration Manager", key="sidebar_app_py_btn"):
+            st.switch_page("pages/Configure.py")
+        st.info("*Configure for *Policy* Rules and Guidelines.  \n *Supports document *versioning*.")
 
         # Example: a widget shared across pages
         if 'api_key' not in st.session_state:
