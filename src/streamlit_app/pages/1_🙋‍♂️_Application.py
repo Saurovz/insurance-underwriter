@@ -30,9 +30,6 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📝 Data Application Page")
-st.write("Use this page to input or process your data.")
-
 def hide_menuItem():
     st.markdown(
         """
@@ -49,9 +46,17 @@ def hide_menuItem():
 #Hide the "Configure" menu item
 hide_menuItem()
 
+# Page Header
+st.markdown("""
+<div style='background: #e3f2fd; padding: 8px; border-radius: 10px; margin-top: 4px;'>
+    <h3 style='color: #174ea6; font-weight: 500;'>📝 1Customer Underwriting Management</h3>
+</div>
+""", unsafe_allow_html=True)
+st.write("Processes **Application Form** and **Lab Reports** for underwriter decision-making and offering best premium.")
+
+
 def application_upload():
     """Handle file upload with separate sections for application form and medical documents"""
-    st.subheader("Application Upload")
     
     # ✅ IMPROVED: Check if we need to reset for new application FIRST
     if st.session_state.get("reset_for_new_application", False):
@@ -87,8 +92,8 @@ def application_upload():
     #     st.code(f"Premium Calculated: {st.session_state.get('premium_calculated', False)}")
 
     # Section 1: Application Form Upload (Mandatory)
-    st.markdown("### 1. Application Form Upload *", unsafe_allow_html=True)
-    st.caption("Upload the insurance application form (Required)")
+    st.markdown("##### 1. Application Upload *", unsafe_allow_html=True)
+    #st.caption("Upload the insurance application form (Required)")
     
     application_form = st.file_uploader(
         "Application Form",
@@ -107,11 +112,11 @@ def application_upload():
         st.session_state.application_form_uploaded = False
         st.session_state.application_form_file = None
     
-    st.divider()
+    #st.divider()
     
     # Section 2: Medical Documents Upload (Mandatory, Multiple files)
-    st.markdown("### 2. Medical Documents Upload *", unsafe_allow_html=True)
-    st.caption("Upload medical reports, test results, prescriptions, etc. (Required - at least 1 file)")
+    st.markdown("##### 2. Lab Reports Upload *", unsafe_allow_html=True)
+    st.caption("Upload one or more medical documents ")
     
     medical_docs = st.file_uploader(
         "Medical Documents",
@@ -137,7 +142,7 @@ def application_upload():
         st.session_state.medical_docs_uploaded = False
         st.session_state.medical_docs_files = []
     
-    st.divider()
+    #st.divider()
     
     # Check if both required uploads are complete
     both_uploaded = (st.session_state.application_form_uploaded and 
@@ -161,7 +166,7 @@ def application_upload():
     
     # Submit button - only enabled if both uploads are complete
     submit_button = st.button(
-        "Submit",
+        "Process Documents",
         type="primary",
         disabled=not both_uploaded,
         use_container_width=False
@@ -265,10 +270,10 @@ def process_multiple_documents(application_id: str, application_form, medical_do
 
 def show_premium_calculation_button(application_id: str):
     """Display Calculate Premium button after data extraction"""
-    st.subheader("💰 Premium Calculation")
-    st.write("Click the button below to evaluate risk and calculate premium")
+    st.subheader("💰 Review and Underwriting")
+    st.write("Access risk and decision making")
     
-    if st.button("Calculate Premium", type="primary", use_container_width=False):
+    if st.button("Evaluate", type="primary", use_container_width=False):
         st.session_state.premium_calculated = False
         execute_underwriting_workflow(application_id)
 
@@ -337,7 +342,7 @@ def execute_underwriting_workflow(application_id: str):
 
 def display_extracted_data(application_id: str):
     """Display extracted data in a table format"""
-    st.subheader("📊 Extracted Application Data")
+    st.subheader("📊 Application Data Extract")
     
     # Retrieve data from database
     data = get_application_by_id(application_id)
@@ -413,7 +418,7 @@ def display_extracted_data(application_id: str):
 
 def display_premium_results(application_id: str):
     """Display premium calculation results"""
-    st.subheader("💵 Premium Calculation Results")
+    st.subheader("💵 Decision Making")
     
     # Retrieve data from database
     data = get_application_by_id(application_id)
@@ -449,7 +454,7 @@ def display_premium_results(application_id: str):
         st.dataframe(risk_df, use_container_width=True, hide_index=True)
     
     with col2:
-        st.markdown("#### 💰 Premium Details")
+        st.markdown("#### 💰 Best Offer")
         premium_df = pd.DataFrame({
             "Field": [
                 "Base Premium",
@@ -500,7 +505,7 @@ def display_premium_results(application_id: str):
             st.info(data.get('flagged_conditions'))
     
     else:
-        st.success("### ✅ AUTO-APPROVED")
+        st.success("##### ✅ AUTO-APPROVED")
         st.markdown(f"""
         **Status:** Application Approved  
         **Plan:** {data.get('recommended_plan', 'Not assigned')}  
@@ -515,7 +520,7 @@ def display_premium_results(application_id: str):
 
     # ✅ ADD: Button to start new application
     st.divider()
-    if st.button("📝 Start New Application", type="primary"):
+    if st.button("📝 New Application", type="primary"):
         st.session_state.reset_for_new_application = True
         st.session_state.application_form_uploaded = False
         st.session_state.medical_docs_uploaded = False

@@ -14,6 +14,22 @@ st.set_page_config(
     layout="wide"
 )
 
+def hide_menuItem():
+    st.markdown(
+        """
+        <style>
+        /* Target the menu item and make it invisible */
+        span[label="Configure"] {
+            visibility: hidden; /* hide background */
+            display: none; /* hide the entire element */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+#Hide the "Configure" menu item
+hide_menuItem()
+
 st.title("📊 Application Details")
 st.write("View all processed insurance applications with complete premium calculations.")
 
