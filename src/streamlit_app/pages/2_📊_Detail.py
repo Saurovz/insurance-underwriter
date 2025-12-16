@@ -3,37 +3,54 @@ import sys
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
+import base64  # Add this import
+import os     # Add this import
+
+
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from streamlit_app.database import get_all_applications, get_application_by_id
 
 
-st.set_page_config(
-    page_title="Application Details",
-    page_icon="📊",
-    layout="wide"
-)
+def display_pdf_preview(file_path: Path, document_name: str):
+    """Display PDF preview with scrollable view"""
+    try:
+        if not file_path.exists():
+            st.error(f"❌ Document not found: {document_name}")
+            return
+        
+        # Read PDF file
+        with open(file_path, "rb") as f:
+            pdf_bytes = f.read()
+        
+        # Convert to base64
+        base64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
+        
+        # Create expandable section for each document
+        with st.expander(f"📄 {document_name}", expanded=False):
+            # Embed PDF with scrollable iframe
+            pdf_display = f'''
+            <iframe 
+                src="data:application/pdf;base64,{base64_pdf}" 
+                width="100%" 
+                height="800px" 
+                type="application/pdf"
+                style="border: 1px solid #ccc; border-radius: 5px;">
+            </iframe>
+            '''
+            st.markdown(pdf_display, unsafe_allow_html=True)
+            
+            # Add download button
+            st.download_button(
+                label=f"⬇️ Download {document_name}",
+                data=pdf_bytes,
+                file_name=document_name,
+                mime="application/pdf"
+            )
+    
+    except Exception as e:
+        st.error(f"Error loading PDF: {str(e)}")
 
-def hide_menuItem():
-    st.markdown(
-        """
-        <style>
-        /* Target the menu item and make it invisible */
-        span[label="Configure"] {
-            visibility: hidden; /* hide background */
-            display: none; /* hide the entire element */
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-#Hide the "Configure" menu item
-hide_menuItem()
-
-st.title("📊 Application Details")
-st.write("View all processed insurance applications with complete premium calculations.")
-
-st.divider()
 
 
 def get_approval_status(app_data):
@@ -391,9 +408,28 @@ def display_detailed_view(application_id: str):
                 st.warning(f"**Reason:** {data.get('review_reason', 'Not specified')}")
 
     
+    # with tab4:
+    #     st.markdown("#### Processing Metadata")
+        
+    #     col1, col2 = st.columns(2)
+        
+    #     with col1:
+    #         st.markdown(f"**Application ID:** `{data.get('id', 'N/A')}`")
+    #         st.markdown(f"**Upload Time:** {data.get('upload_time', 'N/A')}")
+    #         st.markdown(f"**Processing Time:** {data.get('processing_timestamp', 'N/A')}")
+        
+    #     with col2:
+    #         st.markdown(f"**Current Step:** {data.get('current_step', 'N/A')}")
+    #         st.markdown(f"**Documents:** {data.get('filename', 'N/A')}")
+        
+    #     # Errors
+    #     if data.get('errors'):
+    #         st.divider()
+    #         st.markdown("**⚠️ Processing Errors/Warnings:**")
+    #         st.code(data.get('errors', ''), language='text')
+
     with tab4:
         st.markdown("#### Processing Metadata")
-        
         col1, col2 = st.columns(2)
         
         with col1:
@@ -403,13 +439,41 @@ def display_detailed_view(application_id: str):
         
         with col2:
             st.markdown(f"**Current Step:** {data.get('current_step', 'N/A')}")
-            st.markdown(f"**Documents:** {data.get('filename', 'N/A')}")
         
-        # Errors
+        # NEW: Document Preview Section
+        st.divider()
+        st.markdown("#### 📄 Application Documents")
+        
+        # Get documents from database
+        filename_str = data.get('filename', '')
+        application_id = data.get('id', '')
+        
+        if filename_str and filename_str != 'N/A':
+            # Parse multiple filenames (comma-separated)
+            document_names = [name.strip() for name in filename_str.split(',')]
+            
+            # Calculate project root
+            project_root = Path(__file__).parent.parent.parent
+            document_dir = project_root / "Document" / application_id
+            
+            st.info(f"Found **{len(document_names)}** document(s)")
+            
+            # Display each document with preview
+            for doc_name in document_names:
+                if doc_name:  # Skip empty strings
+                    doc_path = document_dir / doc_name
+                    display_pdf_preview(doc_path, doc_name)
+        else:
+            st.warning("⚠️ No documents found for this application")
+        
+        # Errors section (keep this at the end)
         if data.get('errors'):
             st.divider()
             st.markdown("**⚠️ Processing Errors/Warnings:**")
             st.code(data.get('errors', ''), language='text')
+
+
+
 
 
 # Main execution
