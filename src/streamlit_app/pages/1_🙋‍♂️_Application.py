@@ -80,11 +80,11 @@ def application_upload():
         st.session_state.premium_calculated = False
         print(f"\n🆕 NEW APPLICATION ID: {st.session_state.unique_id}")
     
-    # ✅ ADD: Display current application ID for debugging
-    with st.expander("🔍 Debug Info", expanded=False):
-        st.code(f"Current Application ID: {st.session_state.unique_id}")
-        st.code(f"Processing Complete: {st.session_state.get('processing_complete', False)}")
-        st.code(f"Premium Calculated: {st.session_state.get('premium_calculated', False)}")
+    # # ✅ ADD: Display current application ID for debugging
+    # with st.expander("🔍 Debug Info", expanded=False):
+    #     st.code(f"Current Application ID: {st.session_state.unique_id}")
+    #     st.code(f"Processing Complete: {st.session_state.get('processing_complete', False)}")
+    #     st.code(f"Premium Calculated: {st.session_state.get('premium_calculated', False)}")
 
     # Section 1: Application Form Upload (Mandatory)
     st.markdown("### 1. Application Form Upload *", unsafe_allow_html=True)

@@ -1,23 +1,23 @@
 {
     "extracted_data": {
-        "applicant_name": "Ramesh Kumar Verma",
-        "age": 63,
+        "applicant_name": "Arjun Malhotra",
+        "age": 55,
         "gender": "Male",
-        "contact_number": "+91 9876543789",
-        "email": "ramesh.verma@email.com",
-        "address": "45 Krishna Nagar, Lucknow, Uttar Pradesh 226012, India",
-        "occupation": "Retired Government Officer",
-        "annual_income": 850000,
+        "contact_number": "+91 9876543210",
+        "email": "arjun.malhotra@email.com",
+        "address": "42 Park Plaza, Sector 15, Gurgaon, Haryana 122001",
+        "occupation": "Business Owner",
+        "annual_income": 0,
         "chronic_conditions": [
             "Type 2 Diabetes",
             "Hypertension",
-            "High Cholesterol"
+            "Dyslipidemia"
         ],
-        "bmi": 35.5,
+        "bmi": 30.61,
         "smoking_status": "smoker",
-        "alcohol_consumption": "heavy"
+        "alcohol_consumption": "moderate"
     },
-    "timestamp": "2025-12-15T12:59:00.622014",
+    "timestamp": "2025-12-16T00:35:49.584707",
     "status": "success",
     "errors": []
 }
