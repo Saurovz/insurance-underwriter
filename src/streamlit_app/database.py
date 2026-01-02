@@ -236,3 +236,53 @@ def get_all_applications():
     except Exception as e:
         print(f"❌ Error retrieving applications: {e}")
         return []
+
+def update_human_review_decision(application_id: str, decision: str, reviewer_name: str = None) -> bool:
+    """
+    Update application with human review decision
+    
+    Args:
+        application_id: Unique application ID
+        decision: 'approved' or 'declined'
+        reviewer_name: Optional name of the reviewer
+    
+    Returns:
+        bool: Success status
+    """
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        
+        # Determine new status based on decision
+        if decision.lower() == 'approved':
+            new_status = 'completed'
+            requires_review = False
+        elif decision.lower() == 'declined':
+            new_status = 'human_declined'
+            requires_review = False
+        else:
+            raise ValueError(f"Invalid decision: {decision}")
+        
+        # Update application
+        c.execute('''
+            UPDATE applications SET
+            requires_human_review = ?,
+            current_step = ?,
+            processing_timestamp = ?
+            WHERE id = ?
+        ''', (
+            requires_review,
+            new_status,
+            datetime.now().isoformat(),
+            application_id
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        print(f"✓ Human review decision '{decision}' recorded for application ID: {application_id}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error updating human review decision: {e}")
+        return False

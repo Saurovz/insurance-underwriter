@@ -528,7 +528,11 @@ def display_premium_results(application_id: str):
         st.session_state.medical_docs_files = []
         st.rerun()
 
+# ============= FLOATING CHATBOT =============
+from streamlit_app.components.chatbot_widget import render_floating_chatbot
 
+# Render floating chatbot widget
+render_floating_chatbot()
 
 # Initialize database on app load
 init_db()
