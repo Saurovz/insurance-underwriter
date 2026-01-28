@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #0b0f14;
+  color: #fff;
+}
+
+.layout {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  background: #0e1621;
+  padding: 20px;
+}
+
+.sidebar nav a {
+  display: block;
+  color: #cbd5e1;
+  margin: 12px 0;
+  text-decoration: none;
+}
+
+.content {
+  flex: 1;
+  padding: 30px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.upload-card {
+  background: #111827;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.upload-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px dashed #374151;
+  padding: 16px;
+  border-radius: 6px;
+}
+
+button {
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+}
+
+.success-banner {
+  background: #064e3b;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  border-bottom: 1px solid #1f2937;
+  padding: 10px;
+}
+
+.approved {
+  color: #22c55e;
+}
+
+.declined {
+  color: #ef4444;
+}
+
+.sidebar nav a.active {
+  color: #22c55e;
+  font-weight: 600;
+}
