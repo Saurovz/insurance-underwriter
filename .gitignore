@@ -11,3 +11,6 @@ wheels/
 
 # data source
 data
+
+# node module
+node_modules/
