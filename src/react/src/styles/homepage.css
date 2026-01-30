@@ -1,0 +1,43 @@
+.home-container {
+  padding: 20px;
+}
+
+.tile {
+  width: 260px;
+  height: 140px;
+  background: linear-gradient(135deg, #ffffff, #f4f7fb);
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+
+.tile:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #eef3ff, #ffffff);
+}
+
+.tile-icon {
+  font-size: 32px;
+}
+
+.tile-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 24px;
+}
