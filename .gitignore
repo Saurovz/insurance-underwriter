@@ -14,3 +14,12 @@ data
 
 # node module
 node_modules/
+
+# chromadb
+src/insurance_underwriter/chroma_db/
+chroma_db/
+
+
+# sql local db
+*.db
+src/insurance_underwriter/underwriting.db

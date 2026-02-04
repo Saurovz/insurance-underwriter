@@ -1,36 +1,27 @@
 [project]
 name = "insurance-underwriter"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-authors = [
-    { name = "saurovz", email = "sauthakur@teksystems.com" }
-]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
+    "chromadb>=1.4.1",
+    "fastapi==0.109.0",
     "langchain-community>=0.4.1",
-    "langchain-openai>=1.1.0",
-    "langgraph>=1.0.4",
-    "numpy>=2.3.5",
-    "pandas>=2.3.3",
-    "pydantic>=2.12.5",
-    "pypdf>=4.0.0",
-    "transformers>=4.30.0",
-    "torch>=2.0.0",
+    "langchain-core>=1.2.8",
+    "langchain-huggingface>=1.2.0",
+    "langchain-text-splitters>=1.1.0",
+    "langgraph>=1.0.7",
+    "pdfplumber>=0.11.9",
+    "pymupdf>=1.26.7",
+    "pypdf>=6.6.2",
+    "python-dotenv>=1.2.1",
+    "python-multipart==0.0.6",
+    "sentence-transformers>=5.2.2",
+    "torch>=2.10.0",
+    "uvicorn[standard]==0.27.0",
+    "websockets==12.0",
 ]
+[tool.setuptools]
+package-dir = {"" = "src"}
 
-dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "reportlab>=4.0.0",
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "flake8>=6.0.0",
-]
-
-[project.scripts]
-insurance-underwriter = "insurance_underwriter:main"
-
-[build-system]
-requires = ["uv_build>=0.9.15,<0.10.0"]
-build-backend = "uv_build"
+[tool.setuptools.packages.find]
+where = ["src"]

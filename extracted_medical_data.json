@@ -1,0 +1,21 @@
+{
+    "extracted_data": {
+        "applicant_name": "Vikram Sharma",
+        "age": 53,
+        "gender": "Male",
+        "contact_number": "+91 9876543456",
+        "email": "vikram.sharma@email.com",
+        "address": "78 Golf View Apartments, Bangalore, Karnataka 560034, India",
+        "occupation": "Retired Executive",
+        "annual_income": 1200000,
+        "chronic_conditions": [
+            "hypertension"
+        ],
+        "bmi": 25.86,
+        "smoking_status": "smoker",
+        "alcohol_consumption": "moderate"
+    },
+    "timestamp": "2026-02-04T00:06:18.726028",
+    "status": "success",
+    "errors": []
+}
