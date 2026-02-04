@@ -5,7 +5,7 @@ export const Sidebar: React.FC = () => {
   return (
     <div className="sidebar">
       <h3 className="logo">
-        <NavLink to="/homepage">🏠 Home</NavLink>
+        <NavLink to="">🏠 Home</NavLink>
       </h3>
 
 
