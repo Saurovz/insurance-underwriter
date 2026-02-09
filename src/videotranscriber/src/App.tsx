@@ -6,7 +6,6 @@ const App: React.FC = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoUrl, setVideoUrl] = useState<string>("");
   const [uploadedVideos, setUploadedVideos] = useState<string[]>([]);
-  const [showVideoList, setShowVideoList] = useState(false);
   const [uploadedListOpen, setUploadedListOpen] = useState(false);
 
   /* Doctor states */
@@ -20,8 +19,8 @@ const App: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"video" | "pdf" | null>(null);
 
-  const videoLink = "http://localhost:5000/videos/sample.mp4"; // example video
-  const linkPDFPresc = "http://localhost:5000/prescription/sample.pdf"; // example PDF
+  const videoLink = "http://localhost:5000/videos/sample.mp4";
+  const linkPDFPresc = "http://localhost:5000/prescription/sample.pdf";
 
   const openModal = (type: "video" | "pdf") => {
     setModalType(type);
@@ -34,62 +33,87 @@ const App: React.FC = () => {
   };
 
   /* ---------------- Video logic ---------------- */
-  const handleViewUploaded = async () => {
+
+  // Fetch uploaded videos from backend and sort latest first
+  const fetchUploadedVideos = async () => {
     try {
       const res = await fetch("http://localhost:5000/videos-list");
-      const files = await res.json();
-      setUploadedVideos(files);
-      setShowVideoList(true);
+      const files: string[] = await res.json();
+
+      // Sort filenames by timestamp prefix descending (latest first)
+      const sorted = files.sort((a, b) => {
+        const timeA = parseInt(a.split("-")[0]);
+        const timeB = parseInt(b.split("-")[0]);
+        return timeB - timeA;
+      });
+
+      setUploadedVideos(sorted);
     } catch (error) {
       console.error(error);
     }
   };
 
+  // Fetch videos on mount
+  useEffect(() => {
+    fetchUploadedVideos();
+  }, []);
+
   const handlePlayVideo = (fileName: string) => {
     setVideoUrl(`http://localhost:5000/videos/${fileName}`);
-    setShowVideoList(false);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      setVideoFile(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+      handleUpload(file);
     }
   };
 
-  const handleUpload = async () => {
-    if (!videoFile) return alert("Select a video");
+  const handleUpload = async (file?: File) => {
+    const videoToUpload = file || videoFile;
+    if (!videoToUpload) return alert("Select a video");
 
     const formData = new FormData();
-    formData.append("video", videoFile);
+    formData.append("video", videoToUpload);
 
-    const res = await fetch("http://localhost:5000/upload", {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch("http://localhost:5000/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await res.json();
-    if (res.ok) {
-      setVideoUrl(`http://localhost:5000/videos/${data.file.filename}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        setVideoUrl(`http://localhost:5000/videos/${data.file.filename}`);
+        alert(`File "${data.file.filename}" uploaded successfully!`);
+
+        // Prepend to uploadedVideos list
+        setUploadedVideos((prev) => [data.file.filename, ...prev]);
+      } else {
+        alert(data.message || "Upload failed");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error uploading file");
     }
   };
 
   /* ---------------- Doctor features ---------------- */
 
-  // mic + wave
   const startListening = () => {
     setIsListening(true);
     setTimeout(() => setIsListening(false), 30000);
   };
 
-  // text-to-speech
-  const speakText = () => {
-    const text =
-      editorRef.current?.innerText || aiText || "No text to speak";
-    const utter = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utter);
-  };
+  // const speakText = () => {
+  //   const text =
+  //     editorRef.current?.innerText || aiText || "No text to speak";
+  //   const utter = new SpeechSynthesisUtterance(text);
+  //   speechSynthesis.speak(utter);
+  // };
 
-  // AI streaming (mock)
   const generatePrescription = () => {
     const response =
       "Take this medicine twice daily after food. Stay hydrated and rest well.";
@@ -126,10 +150,9 @@ const App: React.FC = () => {
               <input type="file" accept="video/*" onChange={handleFileChange} />
 
               <div className="video-actions">
-                <button onClick={handleUpload}>Upload Video</button>
                 <button
-                  onClick={() => {
-                    handleViewUploaded();
+                  onClick={async () => {
+                    await fetchUploadedVideos();
                     setUploadedListOpen((prev) => !prev);
                   }}
                 >
@@ -169,89 +192,98 @@ const App: React.FC = () => {
                 </div>
               </div>
             </section>
-
-            {/* ================= Doctor Advice ================= */}
-            <section className="card doctor-card">
-              {/* Header */}
-              <div className="doctor-header">
-                <h3>Doctor’s Advice</h3>
-                <span
-                  className="chatbot-icon"
+            
+            {/* Doctor Advice */}
+              <section className="card doctor-card">
+                {/* Header as primary button */}
+                <button
+                  className="doctor-toggle-btn"
                   onClick={() => setDoctorOpen((p) => !p)}
+                  aria-expanded={doctorOpen}
                 >
-                  🤖
-                </span>
-              </div>
+                  <span className="doctor-toggle-left">
+                    🩺 Doctor’s Advice
+                  </span>
 
-              {/* Expanded */}
-              {doctorOpen && (
-                <div className="doctor-body">
-                  {/* Mic */}
-                  <div className="mic-row">
-                    <button onClick={startListening}>🎤 Start Mic</button>
-                    {isListening && <div className="wave" />}
-                  </div>
+                  <span className="doctor-toggle-arrow">
+                    {doctorOpen ? "▲" : "▼"}
+                  </span>
+                </button>
 
-                  {/* Speak */}
-                  <button className="speak-btn" onClick={speakText}>
-                    🔊 Voice Out
-                  </button>
+                {doctorOpen && (
+                  <div className="doctor-body">
+                    {/* Mic */}
+                    <div className="mic-row">
+                      <button className="speak-btn" onClick={startListening}>
+                        🎤 Start Mic
+                      </button>
+                      {isListening && <div className="wave" />}
+                    </div>
 
-                  {/* Rich Text Editor */}
-                  <div
-                    ref={editorRef}
-                    className="rich-editor"
-                    contentEditable
-                  />
+                    {/* Rich Text Editor */}
+                    <div
+                      ref={editorRef}
+                      className="rich-editor"
+                      contentEditable
+                    />
 
-                  {/* AI Output */}
-                  <div className="ai-output">{aiText}</div>
+                    {/* AI Output */}
+                    <div className="ai-output">{aiText}</div>
 
-                  {/* Prescription */}
-                  <button
-                    className="prescription-btn"
-                    onClick={generatePrescription}
-                  >
-                    Prescription
-                  </button>
-
-                  {/* Links */}
-                  <div className="doctor-links">
+                    {/* Prescription */}
                     <button
-                      className="link-btn"
-                      onClick={() => openModal("video")}
+                      className="prescription-btn"
+                      onClick={generatePrescription}
+                      style={{ marginBottom: "14px" }}
                     >
-                      Video Link
+                      Prescription
                     </button>
-                    <button
-                      className="link-btn"
-                      onClick={() => openModal("pdf")}
+
+                    {/* Links */}
+                    <div
+                      className="doctor-links"
+                      style={{ display: "flex", gap: "12px" }}
                     >
-                      PDF Prescription
-                    </button>
+                      <button
+                        className="link-btn"
+                        onClick={() => openModal("video")}
+                      >
+                        Video Link
+                      </button>
+
+                      <button
+                        className="link-btn"
+                        onClick={() => openModal("pdf")}
+                      >
+                        PDF Prescription
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </section>
+                )}
+              </section>
+
+
+            
           </div>
         </div>
       </main>
 
-      {/* ---------------- Modal for Video/PDF ---------------- */}
-      {modalOpen && modalType && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={closeModal}>✖</button>
-            {modalType === "video" ? (
-              <video controls width="100%" height="300">
-                <source src={videoLink} type="video/mp4" />
-              </video>
-            ) : (
-              <iframe src={linkPDFPresc} width="100%" height="400"></iframe>
-            )}
+         {/* ---------------- Modal for Video/PDF ---------------- */}
+        {modalOpen && modalType && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="close-btn" onClick={closeModal}>✖</button>
+              {modalType === "video" ? (
+                <video controls width="100%" height="300">
+                  <source src={videoLink} type="video/mp4" />
+                </video>
+              ) : (
+                <iframe src={linkPDFPresc} width="100%" height="400"></iframe>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
     </div>
   );
 };
