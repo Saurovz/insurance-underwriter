@@ -14,6 +14,14 @@ const App: React.FC = () => {
   const [aiText, setAiText] = useState("");
 
   const editorRef = useRef<HTMLDivElement>(null);
+  
+  /* ---------------- Chatbot ---------------- */
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState<
+    { role: "user" | "bot"; text: string }[]
+  >([]);
+  const [chatInput, setChatInput] = useState("");
+
 
   /* Modal for Video/PDF */
   const [modalOpen, setModalOpen] = useState(false);
@@ -126,6 +134,24 @@ const App: React.FC = () => {
       if (i >= response.length) clearInterval(interval);
     }, 40);
   };
+
+  //* ---------------- Chatbot ---------------- */
+  const sendChatMessage = () => {
+  if (!chatInput.trim()) return;
+
+  const userMsg = { role: "user" as const, text: chatInput };
+  setChatMessages((prev) => [...prev, userMsg]);
+  setChatInput("");
+
+  // Mock bot response (replace with API later)
+  setTimeout(() => {
+    setChatMessages((prev) => [
+      ...prev,
+      { role: "bot", text: "Hello! How can I help you today?" },
+    ]);
+  }, 600);
+ };
+
 
   return (
     <div className="app-container">
@@ -284,6 +310,43 @@ const App: React.FC = () => {
           </div>
         )}
 
+        {/* ================= Floating Chatbot ================= */}
+        <button
+          className="chatbot-float-btn"
+          onClick={() => setChatOpen(true)}
+        >
+          💬
+        </button>
+
+        {chatOpen && (
+          <div className="chatbot-window">
+            <div className="chatbot-header">
+              <span>🤖 Assistant</span>
+              <button onClick={() => setChatOpen(false)}>✖</button>
+            </div>
+
+            <div className="chatbot-body">
+              {chatMessages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`chat-msg ${msg.role}`}
+                >
+                  {msg.text}
+                </div>
+              ))}
+            </div>
+
+            <div className="chatbot-footer">
+              <input
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Type a message..."
+                onKeyDown={(e) => e.key === "Enter" && sendChatMessage()}
+              />
+              <button onClick={sendChatMessage}>Send</button>
+            </div>
+          </div>
+        )}
     </div>
   );
 };
