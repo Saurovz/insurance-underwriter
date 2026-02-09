@@ -1,20 +1,28 @@
-/* Root Container */
-.app-container {
-  display: flex;
-  height: 100vh;
+/* ===================== RESET ===================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0f4f8;
   color: #1e293b;
-  overflow: hidden; 
 }
 
-/* Sidebar */
+/* ===================== ROOT CONTAINER ===================== */
+.app-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===================== SIDEBAR ===================== */
 .sidebar {
   background-color: #0f172a;
   color: white;
   width: 200px;
   padding: 20px 15px;
-  box-sizing: border-box;
   flex-shrink: 0;
 }
 
@@ -33,12 +41,11 @@
   cursor: pointer;
 }
 
-/* Main content */
+/* ===================== MAIN CONTENT ===================== */
 .main-content {
   flex: 1;
   padding: 20px 30px;
   overflow-y: auto;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
@@ -49,105 +56,37 @@
   font-weight: 800;
 }
 
-/* Content wrapper */
+/* ===================== CONTENT WRAPPER ===================== */
 .content-wrapper {
   display: flex;
   gap: 20px;
-  flex: 1; /* take available space */
-  overflow-y: auto; /* scroll if content exceeds */
+  flex: 1;
   position: relative;
+  overflow-y: auto;
 }
 
-/* Left Section */
+/* ===================== LEFT SECTION ===================== */
 .left-section {
-  width: 700px; /* fixed larger width */
+  width: 700px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  overflow-y: visible;
-  transition: width 0.3s ease;
+  overflow-y: auto;
 }
 
 .left-section.full-width {
-  width: calc(100% - 40px); /* leave padding when right collapsed */
+  width: calc(100% - 40px);
 }
 
-/* Right Section */
-.right-section {
-  width: 300px; /* smaller PDF panel */
-  min-width: 250px;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-/* Right section header */
-.right-section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-/* Collapse button */
-.collapse-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #2563eb;
-  padding: 4px;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-.collapse-btn:hover {
-  background-color: #e0e7ff;
-}
-
-/* Expand button */
-.expand-btn {
-  position: absolute;
-  top: 50%;
-  left: 700px; /* right edge of left panel */
-  transform: translateY(-50%);
-  z-index: 2000; /* on top */
-  width: 32px;
-  height: 60px;
-  border-radius: 8px;
-  background-color: #2563eb;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  color: white;
-  transition: background-color 0.3s ease, left 0.3s ease;
-}
-
-.expand-btn:hover {
-  background-color: #1d4ed8;
-}
-
-/* Cards */
+/* ===================== CARDS ===================== */
 .card {
   background-color: #ffffff;
   padding: 15px 20px;
   border-radius: 12px;
   box-shadow: 0 0 10px rgb(209 213 219 / 0.3);
-  box-sizing: border-box;
 }
 
-/* Highlighted cards */
-.highlight {
-  border-left: 6px solid #2563eb;
-  background-color: #f0f7ff;
-}
-
-/* Video buttons */
+/* ===================== VIDEO SECTION ===================== */
 .video-actions button {
   background-color: #00b0ff;
   border: none;
@@ -157,115 +96,19 @@
   border-radius: 6px;
   margin-right: 8px;
   cursor: pointer;
-  transition: background-color 0.25s ease;
-  margin-top: 12px; /* space between input and buttons */
-  display: flex;
-  gap: 8px; /* optional space between multiple buttons */
+  margin-top: 12px;
 }
 
 .video-actions button:hover {
   background-color: #008fc9;
 }
 
-/* Textareas */
-textarea {
-  width: 100%;
-  resize: vertical;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 10px;
-  font-size: 1rem;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-/* Chat box */
-.chat-box {
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  height: 120px;
-  padding: 12px;
-  background-color: #f9fafb;
-  overflow-y: auto;
-}
-
-/* Voice out button */
-.voice-btn {
-  background-color: #2563eb;
-  border: none;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: background-color 0.25s ease;
-}
-
-.voice-btn:hover {
-  background-color: #1e40af;
-}
-
-/* Submit button */
-.submit-btn {
-  margin-top: 25px;
-  background-color: #2563eb;
-  border: none;
-  color: white;
-  padding: 12px 22px;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  width: 100%;
-  max-width: 400px;
-  transition: background-color 0.25s ease;
-}
-
-.submit-btn:hover {
-  background-color: #1e40af;
-}
-
-/* Responsive */
-@media (max-width: 1050px) {
-  .left-section {
-    width: 60%;
-  }
-  .right-section {
-    width: 40%;
-  }
-  .expand-btn {
-    left: 60%;
-  }
-}
-
-@media (max-width: 900px) {
-  .content-wrapper {
-    flex-direction: column;
-    height: auto;
-  }
-  .left-section,
-  .right-section {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  .expand-btn {
-    left: 100%;
-  }
-}
-
-.doctor-textarea {
-  min-height: 150px;
-}
-
-/* Video + Transcription split section */
 .video-transcription-wrapper {
   display: flex;
   gap: 16px;
   margin-top: 10px;
 }
 
-/* Video player area */
 .video-player {
   flex: 1;
 }
@@ -276,7 +119,6 @@ textarea {
   background-color: #000;
 }
 
-/* Transcription area */
 .transcription-box {
   flex: 1;
   display: flex;
@@ -284,6 +126,207 @@ textarea {
 
 .transcription-box textarea {
   flex: 1;
-  resize: vertical;
 }
 
+/* ===================== TEXTAREAS ===================== */
+textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+/* ===================== DOCTOR ADVICE ===================== */
+.doctor-card {
+  padding: 0;
+  overflow: visible;
+}
+
+/* Header */
+.doctor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #f8f9fb;
+  border-bottom: 1px solid #ddd;
+}
+
+.doctor-header h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Chatbot icon */
+.chatbot-icon {
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Body */
+.doctor-body {
+  padding: 16px;
+}
+
+/* Mic + wave */
+.mic-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.wave {
+  width: 60px;
+  height: 12px;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  animation: wave 1s infinite;
+}
+
+@keyframes wave {
+  0% {
+    transform: scaleX(0.4);
+  }
+  50% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0.4);
+  }
+}
+
+/* Buttons */
+.speak-btn {
+  background-color: #2563eb;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.prescription-btn {
+  background-color: #16a34a;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Rich text editor */
+.rich-editor {
+  min-height: 120px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+/* AI output */
+.ai-output {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Doctor links */
+.doctor-links {
+  display: flex;
+  gap: 10px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 1050px) {
+  .left-section {
+    width: 60%;
+  }
+}
+
+@media (max-width: 900px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .left-section {
+    width: 100%;
+  }
+}
+
+/* Prescription button spacing */
+.prescription-btn {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Links spacing */
+.doctor-links {
+  display: flex;
+  gap: 16px; /* space between Video and PDF */
+  margin-bottom: 12px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #f87171;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
