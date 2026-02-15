@@ -1,26 +1,29 @@
-insurance-underwriter/
-├── .venv/
-├── pyproject.toml
-├── uv.lock           
-├── main.py           # The entry point script │
-└── src/
-    └── insurance_underwriter/
-        ├── core/                  # LangGraph State, Nodes, Graph assembly
-        │   ├── state.py
-        │   ├── nodes.py
-        │   └── graph.py
-        ├── data_ingestion/        # PDF extraction and schema
-        │   ├── extraction_schema.py
-        │   ├── pdf_loader.py
-        │   └── ingestion_agent.py
-        ├── config/                # Settings and rules
-        │   ├── settings.py
-        │   └── insurance_rules.py
-        ├── utils/                 # LLM setup, file helpers
-        │   ├── llm_setup.py
-        │   └── helpers.py
-        ├── tests/                 # Unit and integration tests
-        │   └── test_full_graph.py
-        │   └── test_ingestion.py
-        │   └── test_pricing_logic.py
-        └── __init__.py
+# Navigate to your project root first
+cd usecase.ai
+
+# Step 1: Landing Page setup
+cd src/landingzone
+npm install
+
+# Step 2: Insurance Backend setup
+cd ../AI_Insurance_Underwriter/Backend
+uv venv
+source .venv/bin/activate
+uv sync
+
+# Step 3: Insurance Frontend setup
+cd ../Frontend
+npm install
+
+# Step 4: Video Transcriber Backend setup
+cd ../../videotranscriber/Backend
+uv venv
+source .venv/bin/activate
+uv sync
+
+# Step 5: Video Transcriber Frontend setup
+cd ../Frontend
+npm install
+
+# Done! Go back to root
+cd ../../..
