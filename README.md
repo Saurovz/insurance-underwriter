@@ -228,13 +228,13 @@ After returning to the project root, run the following command to start all serv
 ## Terminal Windows while Run
 
 5 Terminal runs opens on different port:
-2 for Insurance_underwriter(FE & BE) + 2 for Video(FE & BE ) + 1 for Landing(FE)
+ - 2 for Insurance_underwriter(FE & BE) + 2 for Video(FE & BE ) + 1 for Landing(FE)
 
-Landing Page:             http://localhost:3000
-Insurance App:            http://localhost:5173
-Video Transcriber:        http://localhost:3002
-Insurance API:            http://localhost:8000
-Video API:                http://localhost:8001
+-Landing Page:             http://localhost:3000
+-Insurance App:            http://localhost:5173
+-Video Transcriber:        http://localhost:3002
+-Insurance API:            http://localhost:8000
+-Video API:                http://localhost:8001
 
 
 <img width="300" height="150" alt="image" src="https://github.com/user-attachments/assets/0adb6df5-4e91-48a8-8ab3-6f56de49b54b" />
