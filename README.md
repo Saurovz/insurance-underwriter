@@ -223,7 +223,29 @@ After returning to the project root, run the following command to start all serv
 .\run-all.bat
 ```
 
+---
 
+## Terminal Windows while Run
+
+5 Terminal runs opens on different port:
+2 for Insurance_underwriter(FE & BE) + 2 for Video(FE & BE ) + 1 for Landing(FE)
+
+Landing Page:             http://localhost:3000
+Insurance App:            http://localhost:5173
+Video Transcriber:        http://localhost:3002
+Insurance API:            http://localhost:8000
+Video API:                http://localhost:8001
+
+
+<img width="300" height="150" alt="image" src="https://github.com/user-attachments/assets/0adb6df5-4e91-48a8-8ab3-6f56de49b54b" />
+<img width="700" height="150" alt="image" src="https://github.com/user-attachments/assets/8e075566-2f43-423d-843f-a6650f007411" />
+
+<img width="300" height="150" alt="image" src="https://github.com/user-attachments/assets/d8cc8382-5a41-4e0e-bbd4-22f9f7a2208b" />
+<img width="700" height="147" alt="image" src="https://github.com/user-attachments/assets/21860ef6-c547-4420-b83b-47ddaac5b6ee" />
+
+<img width="300" height="150" alt="image" src="https://github.com/user-attachments/assets/1167db5f-91b2-498f-ad94-b124beb56f6d" />
+
+---
 
 
 ---
