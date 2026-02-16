@@ -85,13 +85,16 @@ cd ../AI_Insurance_Underwriter/Backend
 uv venv
 
 # Activate environment (Linux / Mac)
-source .venv/bin/activate
+# source .venv/bin/activate
 
-# Activate environment (Windows PowerShell)
-# .venv\Scripts\Activate.ps1
+# Activate environment (Windows)
+.venv\Scripts\Activate
 
 # Install dependencies
 uv sync
+
+# Once all dependencies installed 
+deactivate
 ```
 
 ---
@@ -103,7 +106,7 @@ cd ../Frontend
 npm install
 ```
 
-Installs React / frontend dependencies for the Insurance Underwriter module.
+Installs React / frontend dependencies like node_modules, etc.
 
 ---
 
@@ -116,13 +119,16 @@ cd ../../videotranscriber/Backend
 uv venv
 
 # Activate environment (Linux / Mac)
-source .venv/bin/activate
+# source .venv/bin/activate
 
-# Activate environment (Windows PowerShell)
-# .venv\Scripts\Activate.ps1
+# Activate environment (Windows)
+.venv\Scripts\Activate
 
 # Install dependencies
 uv sync
+
+# Once all dependencies installed 
+deactivate
 ```
 
 ---
@@ -150,7 +156,50 @@ cd ../Frontend
 npm install
 ```
 
-Installs all required frontend packages for the Video Transcriber application.
+Installs all required frontend packages like node_modules for the Video Transcriber application.
+
+---
+
+# 7️⃣ Hugging face — API keys setup
+Project uses quite a number of AI models(LLM) for various activities including
+  - sentence_transformer("all-MiniLM-L6-v2")
+  - conversational ("mistralai/Mistral-7B-Instruct-v0.2")
+  - TRANSLATION ("ai4bharat/indictrans2-en-indic-1B")
+  - MEDITRON ("mistralai/Mistral-7B-Instruct-v0.2")
+  - TTS ("facebook/mms-tts-hin")
+    
+API-key is setup as below:
+* Insurance Underwriter
+
+```bash
+Add .env file in
+  src\AI_Insurance_Underwriter\Backend\src\insurance_underwriter\config\.env
+ with content
+   HUGGINGFACE_API_KEY = "xyzabc"
+```
+
+* Video Transcriber
+
+```bash
+Add .env file in
+  src\videotranscriber\Backend\.env
+ with content
+   HUGGINGFACE_API_KEY = "xyzabc"
+```  
+---
+# 8️⃣ OpenAI-Whisper LLM Model setup
+
+-This model is used to convert Audio to Text
+
+-It is downloaded locally as part of the dependencies in pyproject.toml
+
+-And is placed in user-profile cache. It is acccessible as: 
+
+```bash
+  Win+R 
+  %USERPROFILE%.cache\whisper
+```
+* Download Model occupies space. To recover space, delete the model from the folder path 
 
 ---
 
