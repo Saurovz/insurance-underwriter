@@ -126,8 +126,24 @@ uv sync
 ```
 
 ---
+# 5️⃣ Video Transcriber — FFmpeg Installation & Setup
+Required for whisper to work
 
-# 5️⃣ Video Transcriber — Frontend Setup
+From https://github.com/btbn/ffmpeg-builds/releases
+ - Get ffmpeg-master-latest-win64-gpl-shared.zip
+ - Unzip and add below code so that whisper can find the path
+
+```bash
+import os
+import sys
+# Tell the script where your ffmpeg/bin folder is located; for eg,
+  ffmpeg_path = r"C:\Users\sauthakur\Downloads\ffmpeg\bin" 
+  os.environ["PATH"] += os.pathsep + ffmpeg_path  
+ ```
+
+---
+
+# 6️⃣ Video Transcriber — Frontend Setup
 
 ```bash
 cd ../Frontend
