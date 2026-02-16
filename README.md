@@ -25,6 +25,17 @@ uv sync
 cd ../Frontend
 npm install
 
+# Step 6: FFmpeg Installation & Setup
+    - Required for whisper to work
+    - from https://github.com/btbn/ffmpeg-builds/releases
+      get ffmpeg-master-latest-win64-gpl-shared.zip
+    - Unzip and add below code so that whisper can find the path
+        import os
+        import sys
+        # Tell the script where your ffmpeg/bin folder is
+        ffmpeg_path = r"C:\Users\sauthakur\Downloads\ffmpeg\bin" 
+        os.environ["PATH"] += os.pathsep + ffmpeg_path  
+
 # Done! Go back to root
 cd ../../.. -->
 
