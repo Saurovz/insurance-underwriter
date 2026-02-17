@@ -199,7 +199,7 @@ Add .env file in
   Win+R 
   %USERPROFILE%.cache\whisper
 ```
-* Download Model occupies space. To recover space, delete the model from the folder path 
+* Downloaded Model occupies space. To recover space, delete the model from the folder path 
 
 ---
 
