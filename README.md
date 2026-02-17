@@ -133,7 +133,7 @@ deactivate
 
 ---
 # 5️⃣ Video Transcriber — FFmpeg Installation & Setup
-Required for whisper to work
+Required for OpenAi-Whisper model to work
 
 From https://github.com/btbn/ffmpeg-builds/releases
  - Get ffmpeg-master-latest-win64-gpl-shared.zip
