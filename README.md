@@ -227,8 +227,8 @@ After returning to the project root, run the following command to start all serv
 
 ## Terminal Windows while Run
 
-5 Terminal runs opens on different port:
- - 2 for Insurance_underwriter(FE & BE) + 2 for Video(FE & BE ) + 1 for Landing(FE)
+5 Command Windows open running application on different port:
+ - 2 for Insurance_Underwriter(FE & BE) + 2 for Video_Transciber(FE & BE ) + 1 for LandingPage(FE)
 
 -Landing Page:             http://localhost:3000
 -Insurance App:            http://localhost:5173
