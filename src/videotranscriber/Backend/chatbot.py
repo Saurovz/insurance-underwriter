@@ -4,12 +4,14 @@ from typing import List, Dict, Optional
 import chromadb
 from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Import LangChain for conversational models
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.messages import HumanMessage
 
 load_dotenv()
+
 
 class RAGChatbot:
     """RAG-based chatbot for patient transcription queries"""
@@ -38,7 +40,7 @@ class RAGChatbot:
         try:
             llm = HuggingFaceEndpoint(
                 repo_id=self.llm_model,
-                task="conversational",  # KEY CHANGE: Use conversational task
+                task="conversational",
                 huggingfacehub_api_token=self.hf_api_key,
                 temperature=0.7,
                 max_new_tokens=300
@@ -48,7 +50,128 @@ class RAGChatbot:
         except Exception as e:
             print(f"⚠️ LLM initialization failed: {e}")
             self.chat_model = None
+    
+    # ========== NEW: INTENT CLASSIFICATION ==========
+    def classify_intent(self, question: str) -> str:
+        """
+        Classify user intent to route between general chat and RAG
+        Returns: 'general' or 'patient_specific'
+        """
+        question_lower = question.lower().strip()
         
+        # Keywords for general conversation
+        general_keywords = [
+            # Greetings
+            'hello', 'hi', 'hey', 'good morning', 'good afternoon', 
+            'good evening', 'how are you', 'what\'s up', 'sup',
+            
+            # Date/Time queries
+            'what day', 'what date', 'today', 'time', 'day is it',
+            'date is it', 'what time', 'current date', 'current time',
+            
+            # Chatbot identity
+            'who are you', 'what are you', 'your name', 'who made you',
+            'what can you do', 'help me', 'how do you work',
+            
+            # Thank you / Goodbye
+            'thank you', 'thanks', 'bye', 'goodbye', 'see you', 'later',
+            
+            # Weather (if you want to handle it)
+            'weather', 'temperature', 'forecast'
+        ]
+        
+        # Check if question contains general keywords
+        for keyword in general_keywords:
+            if keyword in question_lower:
+                print(f"🎯 Intent: GENERAL (matched '{keyword}')")
+                return 'general'
+        
+        # Patient-specific keywords (indicates RAG needed)
+        patient_keywords = [
+            'patient', 'symptom', 'diagnosis', 'medical', 'pain',
+            'suffering', 'complain', 'age', 'name', 'transcription',
+            'video', 'describe', 'condition', 'illness', 'disease'
+        ]
+        
+        for keyword in patient_keywords:
+            if keyword in question_lower:
+                print(f"🎯 Intent: PATIENT_SPECIFIC (matched '{keyword}')")
+                return 'patient_specific'
+        
+        # Default: If question is very short (1-3 words), likely general
+        if len(question.split()) <= 3:
+            print(f"🎯 Intent: GENERAL (short query)")
+            return 'general'
+        
+        # Otherwise, assume patient-specific (safer for medical context)
+        print(f"🎯 Intent: PATIENT_SPECIFIC (default)")
+        return 'patient_specific'
+    
+    # ========== NEW: HANDLE GENERAL QUESTIONS ==========
+    def handle_general_question(self, question: str) -> str:
+        """
+        Handle general conversational questions without RAG
+        """
+        question_lower = question.lower().strip()
+        
+        # Greetings
+        if any(word in question_lower for word in ['hello', 'hi', 'hey']):
+            return "Hello! 👋 I'm your medical transcription assistant. I can help you understand patient information from transcribed videos. Feel free to ask me questions about the patient's symptoms, conditions, or any details from the transcription!"
+        
+        if 'how are you' in question_lower:
+            return "I'm functioning well, thank you! 😊 I'm here to help you analyze patient transcriptions. Do you have any questions about the patient data?"
+        
+        # Date and time
+        if any(word in question_lower for word in ['what day', 'what date', 'today', 'date is it']):
+            current_date = datetime.now().strftime("%A, %B %d, %Y")
+            return f"Today is {current_date}."
+        
+        if 'time' in question_lower and any(word in question_lower for word in ['what', 'current']):
+            current_time = datetime.now().strftime("%I:%M %p")
+            return f"The current time is {current_time}."
+        
+        # Chatbot identity
+        if any(phrase in question_lower for phrase in ['who are you', 'what are you']):
+            return "I'm an AI-powered medical transcription assistant. I analyze patient video transcriptions and answer questions about patient symptoms, conditions, and medical information. Upload a video and ask me anything about the patient!"
+        
+        if 'what can you do' in question_lower or 'help' in question_lower:
+            return """I can help you with:
+            
+1. **Analyze transcribed patient videos** - Extract key medical information
+2. **Answer questions** about patient symptoms, age, conditions
+3. **Search through transcriptions** - Find specific details quickly
+4. **Provide context** - Give you relevant excerpts from patient conversations
+
+Just upload a video, and ask me questions like:
+- "What symptoms is the patient experiencing?"
+- "How long has the patient been suffering?"
+- "What is the patient's age?"
+"""
+        
+        # Thank you
+        if 'thank' in question_lower:
+            return "You're welcome! 😊 Let me know if you need anything else!"
+        
+        # Goodbye
+        if any(word in question_lower for word in ['bye', 'goodbye', 'see you']):
+            return "Goodbye! Take care. Feel free to return anytime you need help with patient transcriptions! 👋"
+        
+        # Fallback: Try using LLM for general conversation
+        if self.chat_model:
+            try:
+                print("🔄 Using LLM for general conversation...")
+                messages = [HumanMessage(content=f"You are a friendly medical assistant chatbot. Respond to this general question naturally and concisely:\n\n{question}")]
+                response = self.chat_model.invoke(messages)
+                if response and hasattr(response, 'content'):
+                    return response.content.strip()
+            except Exception as e:
+                print(f"⚠️ LLM failed: {e}")
+        
+        # Final fallback
+        return "I'm here to help with patient transcription analysis. Could you please ask a question about the patient's medical information, or say 'help' to learn what I can do?"
+    
+    # ========== REST OF YOUR EXISTING METHODS (unchanged) ==========
+    
     def create_patient_collection(self, patient_id: str) -> chromadb.Collection:
         """Create or get a collection for a specific patient"""
         collection_name = f"patient_{patient_id}"
@@ -74,11 +197,11 @@ class RAGChatbot:
         chunks = []
         
         if len(words) <= chunk_size:
-            return [text]  # Return as single chunk if small enough
+            return [text]
         
         for i in range(0, len(words), chunk_size):
-            chunk = ' '.join(words[i:i + chunk_size + 50])  # 50 word overlap
-            if chunk.strip():  # Only add non-empty chunks
+            chunk = ' '.join(words[i:i + chunk_size + 50])
+            if chunk.strip():
                 chunks.append(chunk)
         
         return chunks if chunks else [text]
@@ -88,24 +211,18 @@ class RAGChatbot:
         try:
             print(f"📝 Adding transcription for {patient_id} to vector database...")
             
-            # Validate input
             if not transcription or not transcription.strip():
                 print("⚠️ Empty transcription, skipping ChromaDB")
                 return False
             
-            # Create collection
             collection = self.create_patient_collection(patient_id)
-            
-            # Chunk the transcription
             chunks = self.chunk_text(transcription)
             print(f"📄 Split into {len(chunks)} chunks")
             
-            # Generate embeddings
             print("🔄 Generating embeddings...")
             embeddings = self.embedding_model.encode(chunks).tolist()
             print(f"✓ Generated {len(embeddings)} embeddings")
             
-            # Prepare metadata
             metadatas = [
                 {
                     "patient_id": patient_id,
@@ -116,7 +233,6 @@ class RAGChatbot:
                 for i in range(len(chunks))
             ]
             
-            # Add to ChromaDB
             collection.add(
                 embeddings=embeddings,
                 documents=chunks,
@@ -139,17 +255,14 @@ class RAGChatbot:
             collection_name = f"patient_{patient_id}"
             collection = self.chroma_client.get_collection(name=collection_name)
             
-            # Generate query embedding
             print(f"🔍 Searching for: {question}")
             query_embedding = self.embedding_model.encode([question]).tolist()
             
-            # Search ChromaDB
             results = collection.query(
                 query_embeddings=query_embedding,
                 n_results=top_k
             )
             
-            # Extract relevant documents
             documents = results['documents'][0] if results['documents'] else []
             
             print(f"✓ Retrieved {len(documents)} relevant chunks")
@@ -162,7 +275,7 @@ class RAGChatbot:
             return []
     
     def call_huggingface_llm(self, prompt: str) -> Optional[str]:
-        """Call HuggingFace LLM using conversational task (2026 compatible)"""
+        """Call HuggingFace LLM using conversational task"""
         
         if not self.chat_model:
             print("⚠️ LLM not available")
@@ -170,11 +283,7 @@ class RAGChatbot:
         
         try:
             print(f"🔄 Calling conversational LLM...")
-            
-            # Create message for conversational model
             messages = [HumanMessage(content=prompt)]
-            
-            # Invoke the chat model
             response = self.chat_model.invoke(messages)
             
             if response and hasattr(response, 'content'):
@@ -190,21 +299,37 @@ class RAGChatbot:
             print(f"⚠️ LLM error: {e}")
             return None
     
+    # ========== MODIFIED: MAIN ANSWER GENERATION WITH INTENT ROUTING ==========
     def generate_answer(self, patient_id: str, question: str, patient_info: Dict) -> str:
-        """Generate answer using RAG pipeline with LLM"""
+        """
+        Generate answer using hybrid approach:
+        - General questions → Direct response (no RAG)
+        - Patient-specific → RAG pipeline
+        """
         try:
             print(f"🤖 Processing question: {question}")
             
-            # Step 1: Retrieve relevant context from ChromaDB
+            # ===== STEP 1: CLASSIFY INTENT =====
+            intent = self.classify_intent(question)
+            
+            # ===== STEP 2: ROUTE BASED ON INTENT =====
+            if intent == 'general':
+                print("💬 Handling as general conversation")
+                return self.handle_general_question(question)
+            
+            # ===== STEP 3: PATIENT-SPECIFIC → USE RAG =====
+            print("🔬 Handling as patient-specific query (RAG)")
+            
+            # Retrieve relevant context from ChromaDB
             relevant_chunks = self.query_patient_data(patient_id, question, top_k=3)
             
             if not relevant_chunks:
                 return "I don't have enough information to answer that question. Please make sure the patient audio has been transcribed first."
             
-            # Step 2: Build context
+            # Build context
             context = "\n\n".join(relevant_chunks)
             
-            # Step 3: Build prompt for LLM
+            # Build prompt for LLM
             prompt = f"""You are a medical assistant analyzing patient information.
 
 Patient Name: {patient_info.get('name', 'N/A')}
@@ -217,13 +342,13 @@ Question: {question}
 
 Provide a clear, concise answer based ONLY on the patient information above."""
             
-            # Step 4: Try to generate answer using LLM
+            # Try LLM generation
             answer = self.call_huggingface_llm(prompt)
             
             if answer:
                 return answer
             
-            # Step 5: FALLBACK - Rule-based answers
+            # Fallback - Rule-based answers
             print("💡 Using intelligent fallback")
             
             question_lower = question.lower()
