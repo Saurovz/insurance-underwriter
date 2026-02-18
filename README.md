@@ -197,7 +197,7 @@ Add .env file in
 
 ```bash
   Win+R 
-  %USERPROFILE%.cache\whisper
+  %USERPROFILE%\.cache\whisper
 ```
 * Downloaded Model occupies space. To recover space, delete the model from the folder path 
 
