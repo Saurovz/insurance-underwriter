@@ -1,0 +1,102 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments (all levels)
+.venv/
+venv/
+env/
+ENV/
+
+# Environment variables (IMPORTANT!)
+.env
+**/.env
+*.env
+.env.*
+!.env.example
+
+# Data source
+data/
+
+# Node modules (all levels)
+node_modules/
+
+# ============================================
+# AI_Insurance_Underwriter Backend specific
+# ============================================
+src/AI_Insurance_Underwriter/Backend/chroma_db/
+src/AI_Insurance_Underwriter/Backend/Document/
+src/AI_Insurance_Underwriter/Backend/underwriting.db
+src/AI_Insurance_Underwriter/Backend/extracted_medical_data.json
+
+# ============================================
+# VideoTranscriber specific
+# ============================================
+# Backend
+src/videotranscriber/Backend/.venv/
+src/videotranscriber/Backend/chroma_db/
+src/videotranscriber/Backend/patient_records/
+src/videotranscriber/Backend/audio/
+src/videotranscriber/Backend/videos/
+src/videotranscriber/Backend/.env
+
+# Frontend
+src/videotranscriber/Frontend/node_modules/
+
+# ============================================
+# AI_Insurance_Underwriter Frontend
+# ============================================
+src/AI_Insurance_Underwriter/Frontend/node_modules/
+
+# ============================================
+# Landingzone
+# ============================================
+src/landingzone/node_modules/
+
+# ============================================
+# Old structure (deleted files) - keeping for reference
+# ============================================
+Document/
+extracted_medical_data.json
+src/insurance_underwriter/chroma_db/
+chroma_db/
+
+# SQL databases (all levels)
+*.db
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE and Editor files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Misc
+$null
+
+# Optional: Uncomment if you don't want to track these
+# run-all.bat
+# run-all.ps1
+# package-lock.json
