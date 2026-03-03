@@ -256,7 +256,10 @@ After returning to the project root, run the following command to start all serv
 
 
 
-# 📬 Support
+# 📬 Landing Page
+
+<img width="1294" height="847" alt="image" src="https://github.com/user-attachments/assets/b0665601-4038-4be9-af70-d55eeb7f97a3" />
+
 
 If you face setup issues, verify:
 
